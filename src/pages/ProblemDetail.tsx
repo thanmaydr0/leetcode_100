@@ -130,7 +130,10 @@ export default function ProblemDetail() {
         }
 
         const { error } = await supabase!.from('user_progress').upsert(payload, { onConflict: 'user_id,problem_id' });
-        if (!error && showToast) {
+        if (error) {
+            console.error('Error saving progress:', error);
+            if (showToast) addToast(`Error saving progress: ${error.message}`, 'error');
+        } else if (showToast) {
             addToast('Progress saved', 'success');
         }
     };
